@@ -16,7 +16,7 @@
             <p class="message"></p>
 
             <button class="btn negative cancel" data-order="cancel">Cancel</button>
-            <button class="btn btn-flat primary order" data-order="order">Order</button>
+            <button class="btn btn-flat primary order" data-order="order" data-navigation='pagethree'>Order</button>
         </div>
     </div>
 </pagetwo>
@@ -25,4 +25,37 @@
 	/*
 	 * JavaScript code can be executed when the template is loaded
 	 */
+    var action = null;
+
+    var onAction = function(evt) {
+        var target = evt.target;
+        action = 'ok';
+        if(target.getAttribute('data-order') === 'order') {
+           // phonon.alert('Thank you for your order!', 'Dear customer');
+
+        } else {
+            phonon.alert('Your order has been canceled.', 'Dear customer');
+        }
+    };
+
+    page.onCreate = function() {
+        document.querySelector('.order').on('tap', onAction);
+        document.querySelector('.cancel').on('tap', onAction);
+    };
+
+    page.onClose = function(self) {
+        if(action !== null) {
+            self.close();
+        } else {
+            phonon.alert('Before leaving this page, you must perform an action.', 'Action required');
+        }
+    };
+
+    page.onHidden = function() {
+        action = null;
+    };
+
+    page.onHashChanged = function(pizza) {
+        document.querySelector('.pizza').textContent = pizza;
+    };
 </script>

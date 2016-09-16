@@ -27,43 +27,11 @@ app.on({page: 'home'});
  * here we did not implement it, but if you do, you can use readyDelay to add a small delay
  * between the OnCreate and the OnReady callbacks
 */
-app.on({page: 'pagetwo', preventClose: true, readyDelay: 1}, function(activity) {
+app.on({page: 'pagetwo', preventClose: true, readyDelay: 1 });
 
-    var action = null;
 
-    var onAction = function(evt) {
-        var target = evt.target;
-        action = 'ok';
-
-        if(target.getAttribute('data-order') === 'order') {
-            phonon.alert('Thank you for your order!', 'Dear customer');
-
-        } else {
-            phonon.alert('Your order has been canceled.', 'Dear customer');
-        }
-    };
-
-    activity.onCreate(function() {
-        document.querySelector('.order').on('tap', onAction);
-        document.querySelector('.cancel').on('tap', onAction);
-    });
-
-    activity.onClose(function(self) {
-        if(action !== null) {
-            self.close();
-        } else {
-            phonon.alert('Before leaving this page, you must perform an action.', 'Action required');
-        }
-    });
-
-    activity.onHidden(function() {
-        action = null;
-    });
-
-    activity.onHashChanged(function(pizza) {
-        document.querySelector('.pizza').textContent = pizza;
-    });
-});
+app.on({page: 'pagethree', renderOn:'maincontent'});
+app.on({page: 'pagefour', renderOn:'maincontent'});
 
 // Let's go!
 app.start();
