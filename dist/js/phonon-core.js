@@ -1682,7 +1682,8 @@ phonon.tagManager = (function () {
     for (prop in properties) {
       newPage[prop] = properties[prop];
     }
-
+    if (typeof newPage.renderOn === 'string')
+      newPage.nocache = true;//needed because it gets 'overriten'. maybe we can think some kind of cach system for this type of pages.
     return newPage;
   }
 
