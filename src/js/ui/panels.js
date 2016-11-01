@@ -133,12 +133,15 @@
 	function onHide() {
 		document.body.removeChild(this);
 
-		var object = findObject(this.getAttribute('data-backdrop-for'))
+        var object = findObject(this.getAttribute('data-backdrop-for'));
 
-		_activeObjects.splice(object.index, 1)
+        removePanel(object);
 
 		this.off(phonon.event.transitionEnd, onHide, false);
-	}
+    }
+    function removePanel(object) {
+        _activeObjects.splice(object.index, 1);
+    }
 
 	/**
 	* Public API
@@ -151,10 +154,12 @@
 			window.setTimeout(function () {
 				panel.classList.add('active');
 			}, 10);
-			
-			var backdrop = createBackdrop(panel.getAttribute('id'));
-
-			document.body.appendChild(backdrop);
+            
+            var backdrop = null;
+            if (panel.getAttribute('data-no-backdrop') !== "true") {
+                backdrop = createBackdrop(panel.getAttribute('id'));
+                document.body.appendChild(backdrop);
+            }
 
 			_activeObjects.push({panel: panel, backdrop: backdrop});
 		}
@@ -175,10 +180,13 @@
 
 			var pObject = findObject(panel.getAttribute('id'))
 
-			if(pObject) {
-				pObject.backdrop.classList.add('fadeout');
-				pObject.backdrop.on(phonon.event.transitionEnd, onHide, false);
-			}
+            if (pObject && pObject.backdrop) {
+                pObject.backdrop.classList.add('fadeout');
+                pObject.backdrop.on(phonon.event.transitionEnd, onHide, false);
+            }
+            else {
+                removePanel(pObject);
+            }
 
 		}
 	}
